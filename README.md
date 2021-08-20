@@ -62,6 +62,7 @@ Demo fitting can be simply computed by running `run_fitting.py`. We provide basi
 Following the namespace of parsing arguments, you can run your own fitting.
 
 One example is:  
-`python run_fitting.py --subject 'S01' --activity 'walking_direction1' --viz-results`
+`python run_fitting.py --subject 'S59' --activity 'walking_direction1' --viz-results`
 
-This will run optimization on Subject *S01* with *walking_direction1* activity and save video of SMPL mesh results.
+This will run optimization on Subject *S59* with *walking_direction1* activity and save video of SMPL mesh results as below:
+![**Video1**: Reconstructed SMPL Model](asset/sample.gif)
