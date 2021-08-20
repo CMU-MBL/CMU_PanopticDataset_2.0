@@ -78,7 +78,6 @@ def projectKeypoints(x3d, img_res, K, R, t, conf=None, dist=None):
     visible = np.logical_and(x_visible, y_visible)
     visMask = np.logical_and(visible, R2_criterion < 1.)
     
-    import pdb; pdb.set_trace()
     mask = np.logical_and(confMask, visMask)
 
     return x2d, mask
