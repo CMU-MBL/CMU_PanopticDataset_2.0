@@ -5,7 +5,7 @@ Official code repository for the paper: <br>
 Eni Halilj*, Soyong Shin, Eric Rapp, Donglai Xiang  
 Journal of Biomechanics, 2021  
   
-![figure [algorithm]: Algorithm Overview](asset/_algorithm.png)
+![figure [algorithm]: Algorithm Overview](asset/algorithm.png)
   
 <br><br>
 ## Installation  
