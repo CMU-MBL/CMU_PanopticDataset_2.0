@@ -5,7 +5,9 @@ Official code repository for the paper: <br>
 Eni Halilj*, Soyong Shin, Eric Rapp, Donglai Xiang  
 Journal of Biomechanics, 2021  
   
+![Algorithm Overview](asset/_algorithm.png)
   
+<br><br>
 ## Installation  
 
 All programming package is **only** tested on Ubuntu 20.04 and CUDA 11.2 with python 3.8.
