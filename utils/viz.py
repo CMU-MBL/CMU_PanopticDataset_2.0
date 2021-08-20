@@ -1,5 +1,5 @@
 from utils import constants as _C
-from utils.viz_utils import CONNECTIVITY_SET, COLOR_SET, projectKeypoints
+from utils.viz_utils import CONNECTIVITY_SET, COLOR_SET, projectKeypoints, projectSMPL
 
 import numpy as np
 import torch
@@ -127,7 +127,8 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
     imgBG = np.ones([*imgRes, 3]) * 255
     
     if calibration is not None:
-        camR, camT, camK = calibration['R'], calibration['t'], calibration['K']
+        camR, camT, camK = calibration['camera_pose'], calibration['camera_transl'], calibration['camera_intrinsics']
+        bodyModelOutput = projectSMPL(bodyModel, bodyModelOutput, calibration)
 
     else:
         camR , camT, camK = np.eye(3), np.array([[0, 1, 30]]), np.array([[5e3, 0, imgRes[1]/2], [0, 5e3, imgRes[0]/2], [0, 0, 1]])
@@ -152,7 +153,7 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
         
         if not 'keypoints' in args.viz_type:
             vertices = predVertices[frameIdx]
-            img = renderSMPL(vertices, faces, imgBG.copy(), camK, camR, camT)
+            img = renderSMPL(vertices, faces, imgBG.copy(), camK, np.eye(3), camT)
 
         else:
             x2d = gtX2d[frameIdx] if args.viz_type == 'gt-keypoints' else predX2d[frameIdx]

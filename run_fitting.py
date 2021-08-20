@@ -85,7 +85,11 @@ def RunFitting(args, gtKeypoints, gtGyros, bodyModel):
     # Visualize Optimization Results    
     if args.viz_results:
         if args.viz_cam_calib is not None:
-            calibration = loadCalibration(args.viz_cam_calib)
+            calibrations = loadCalibration(args.viz_cam_calib)
+        
+        # One sample view, you can modify this if you want
+        calibration = calibrations['hd_00_11']
+
         vidName = osp.join(args.viz_dir, f'{args.subject}_{args.activity}.mp4')
         generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeypointsConf, calibration=None) 
     
