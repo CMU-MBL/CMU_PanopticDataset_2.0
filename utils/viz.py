@@ -161,6 +161,5 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
         cv2.imwrite(imgName, img.astype(np.int16))
 
     # if seqLength > 100:
-    framerate = max(30, seqLen//10)
-    os.system(f'ffmpeg -hide_banner -loglevel error -framerate {framerate} -pattern_type glob -i "{tmpDir}/*.png" -c:v libx264 -pix_fmt yuv420p {vidName}')
+    os.system(f'ffmpeg -hide_banner -loglevel error -framerate 30 -pattern_type glob -i "{tmpDir}/*.png" -c:v libx264 -pix_fmt yuv420p {vidName}')
     os.system(f'rm -rf {tmpDir}')
