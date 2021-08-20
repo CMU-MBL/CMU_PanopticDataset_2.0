@@ -14,7 +14,6 @@ __all__ = [
     "rotation_matrix_to_quaternion",
     "quaternion_to_angle_axis",
     "angle_axis_to_quaternion",
-    "rtvec_to_pose",
 ]
 
 
@@ -149,30 +148,6 @@ def angle_axis_to_rotation_matrix(angle_axis):
     rotation_matrix[..., :3, :3] = \
         mask_pos * rotation_matrix_normal + mask_neg * rotation_matrix_taylor
     return rotation_matrix  # Nx4x4
-
-
-def rtvec_to_pose(rtvec):
-    """
-    Convert axis-angle rotation and translation vector to 4x4 pose matrix
-
-    Args:
-        rtvec (Tensor): Rodrigues vector transformations
-
-    Returns:
-        Tensor: transformation matrices
-
-    Shape:
-        - Input: :math:`(N, 6)`
-        - Output: :math:`(N, 4, 4)`
-
-    Example:
-        >>> input = torch.rand(3, 6)  # Nx6
-        >>> output = tgm.rtvec_to_pose(input)  # Nx4x4
-    """
-    assert rtvec.shape[-1] == 6, 'rtvec=[rx, ry, rz, tx, ty, tz]'
-    pose = angle_axis_to_rotation_matrix(rtvec[..., :3])
-    pose[..., :3, 3] = rtvec[..., 3:]
-    return pose
 
 
 def rotation_matrix_to_angle_axis(rotation_matrix):
