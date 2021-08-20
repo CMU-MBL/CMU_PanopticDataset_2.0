@@ -27,7 +27,7 @@ conda install -c conda-forge ffmpeg
 ```
 
 ### Step 3. Download Dataset
-We have published CMU_Panoptic_Dataset_2.0 at [SimTK-project-page](https://simtk.org/projects/cmupanopticdata)). 
+We have published CMU_Panoptic_Dataset_2.0 at [SimTK-project-page](https://simtk.org/projects/cmupanopticdata). 
 Following the guideline of SimTK data share, you can download the dataset in your local machine.
 Once you download all data and extract the .zip files, you need to make a soft link of the dataset to the repository.
 ```
