@@ -38,14 +38,14 @@ ln -s <DATASET PATH> ./data/
 ### Step 4. Download relevant files for SMPL model
 In order to run optimization fitting on 3D body model, you need to download few files as below:
 1. SMPL model  
-    *SMPL_MALE.pkl*, *SMPL_FEMALE.pkl*, *SMPL_NEUTRAL.pkl*  
+    `SMPL_MALE.pkl`, `SMPL_FEMALE.pkl`, `SMPL_NEUTRAL.pkl`  
     Can be found on the [SMPL-Official-Homepage](https://smpl.is.tue.mpg.de/).
     <br><br>
 2. SMPL regression matrix  
-    *SMPLCOCORegressor.npy*  
+    `SMPLCOCORegressor.npy`  
     Can be downloaded by here<br><br>
 3. SMPL mean parameters and Gaussian pose prior  
-    *smpl_mean_params.npz*  *gmm08.pkl*
+    `smpl_mean_params.npz`  `gmm08.pkl`  
     Visit [SPIN-Official-Repository](https://github.com/nkolot/SPIN) and get those files by fetching data.
 
 Then place those files as following structure:
