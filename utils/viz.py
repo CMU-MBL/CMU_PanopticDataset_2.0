@@ -121,17 +121,19 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
     if gtKeypointsConf is not None:
         gtKeypointsConf = gtKeypointsConf[:, _C.OP25_TO_OP26].detach().cpu().squeeze(-1).numpy()
 
-    imgRes = args.viz_res
     outDir = args.viz_dir; os.makedirs(outDir, exist_ok=True)
     tmpDir = osp.join(outDir, 'images'); os.system(f'rm -rf {tmpDir}'); os.makedirs(tmpDir)
-    imgBG = np.ones([*imgRes, 3]) * 255
     
     if calibration is not None:
-        camR, camT, camK = calibration['camera_pose'], calibration['camera_transl'], calibration['camera_intrinsics']
+        camR, camT, camK, imgRes = calibration['camera_pose'], calibration['camera_transl'].T / 1e2, \
+                                   calibration['camera_intrinsics'], calibration['resolution'][::-1]
         bodyModelOutput = projectSMPL(bodyModel, bodyModelOutput, calibration)
 
     else:
         camR , camT, camK = np.eye(3), np.array([[0, 1, 30]]), np.array([[5e3, 0, imgRes[1]/2], [0, 5e3, imgRes[0]/2], [0, 0, 1]])
+        imgRes = args.viz_res
+
+    imgBG = np.ones([*imgRes, 3]) * 255
 
     # Align Fitting results with Ground-Truth
     gtPelvis = gtKeypoints[:, [6, 12]].mean(1, keepdims=True)

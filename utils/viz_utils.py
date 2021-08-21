@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -29,13 +30,19 @@ COLOR_SET = [(220,20,60), (220,20,60), (220,20,60), (220,20,60),  # face
 
 
 def projectKeypoints(x3d, img_res, K, R, t, conf=None, dist=None):
-    """
-    x3d : F * N * 3 numpy array
-    K : 3 * 3 numpy array
-    R : 3 * 3 numpy array
-    t : 3 * 1 numpy array
-    conf : F * N * 1 numpy array
-    dist : 5 * 1 numpy array
+    """Projecting 3D keypoints into 2D image plane
+
+    Args:
+        x3d: 3D keypoints, (N, J, 3)
+        K: Camera intrinsics, (3, 3)
+        R: Camera pose, (3, 3)
+        t: Camera translation, (3, 1)
+        conf: Keypoints confidence (optional), (N, J, 1)
+        dist: Camera distortion (optional), (5, 1)
+    
+    Returns:
+        x2d: Projected 2D keypoints, (N, J, 2)
+        mask: Visible mask, (N, J)
     """
 
     imh, imw = img_res
@@ -54,6 +61,7 @@ def projectKeypoints(x3d, img_res, K, R, t, conf=None, dist=None):
         xp = x[:2] / x[2]
 
         if dist is not None:
+
             X2 = xp[0] * xp[0]
             Y2 = xp[1] * xp[1]
             XY = X2 * Y2
@@ -84,15 +92,26 @@ def projectKeypoints(x3d, img_res, K, R, t, conf=None, dist=None):
 
 
 def projectSMPL(bodyModel, bodyModelOutput, calibration):
+    """Rotate SMPL body model to given camera pose
+
+    Args:
+        bodyModel: SMPL body model
+        bodyModelOutput: SMPL body model output with parameters
+        calibration: Camera calibrations (rotation)
+    
+    Returns:
+        bodyModelOutput: Rotated SMPL body model output
+    """
+
     from scipy.spatial.transform import Rotation as _R
 
-    device = bodyModel.device
-    bp = torch.from_numpy(_R.from_rotvec(bodyModelOutput.body_pose.detach().cpu().numpy().reshape(-1, 3)).as_matrix()).float().to(device)
+    device = bodyModelOutput.betas.device
+    bp = torch.from_numpy(_R.from_rotvec(bodyModelOutput.body_pose.detach().cpu().numpy().reshape(-1, 3)).as_matrix()).float().to(device).reshape(-1, 23, 3, 3)
     bs = bodyModelOutput.betas
-    go = _R.from_rotvec(bodyModelOutput.global_orient.detach().cpu().numpy).as_matrix()
-    go = calibration['R'] @ go
-    go = torch.from_numpy(go).float().to(device)
+    go = _R.from_rotvec(bodyModelOutput.global_orient.detach().cpu().numpy()).as_matrix()
+    go = calibration['camera_pose'] @ go
+    go = torch.from_numpy(go).float().to(device).reshape(-1, 1, 3, 3)
 
-    bodyModelOutput = bodyModel(body_pose=bp, betas=bs, global_orient=go)
+    bodyModelOutput = bodyModel(body_pose=bp, betas=bs, global_orient=go, pose2rot=False)
     
     return bodyModelOutput
