@@ -50,7 +50,8 @@ In order to run optimization fitting on 3D body model, you need to download few 
 
 Then place those files as following structure:
 ```
-<REPO DIR> -- data\ -- body_models\ -- smpl\ -- SMPL_MALE.pkl, SMPL_FEMALE.pkl, SMPL_NEUTRAL.pkl
+<REPO DIR> -- data\ -- CMU_Panoptic_Dataset_2.0\ ...
+                    -- body_models\ -- smpl\ -- SMPL_MALE.pkl, SMPL_FEMALE.pkl, SMPL_NEUTRAL.pkl
                                     -- SMPLCOCORegressor.npy
                                     -- smpl_mean_params.npz
                                     -- gmm_08.pkl
