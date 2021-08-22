@@ -43,7 +43,7 @@ In order to run optimization fitting on 3D body model, you need to download few 
     <br><br>
 2. SMPL regression matrix  
     `SMPLCOCORegressor.npy`  
-    Can be downloaded by here<br><br>
+    Can be downloaded by [Here](https://cmu.box.com/s/xvvx1phg370q1hqm50cmun63n5tbex4m)<br><br>
 3. SMPL mean parameters and Gaussian pose prior  
     `smpl_mean_params.npz`  `gmm08.pkl`  
     Visit [SPIN-Official-Repository](https://github.com/nkolot/SPIN) and get those files by fetching data.
