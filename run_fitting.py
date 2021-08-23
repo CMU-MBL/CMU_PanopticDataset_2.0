@@ -97,9 +97,8 @@ def RunFitting(args, gtKeypoints, gtGyros, bodyModel):
 def main():
     
     # Load Keypoints and IMU data
-    dataDir = _C.DATA_DIR
-    keypointsDir = osp.join(dataDir, args.subject, args.activity, _C.KEYPOINTS_FLDR)
-    imuDir = osp.join(dataDir, args.subject, args.activity, _C.IMU_FLDR)
+    keypointsDir = osp.join(_C.DATA_DIR, args.subject, args.activity, _C.KEYPOINTS_FLDR)
+    imuDir = osp.join(_C.DATA_DIR, args.subject, args.activity, _C.IMU_FLDR)
     gtKeypoints = loadKeypoints(keypointsDir)[0][0]
     gtGyros, _ = loadIMU(imuDir, args.imu_parts, gtKeypoints.shape[0])
 
@@ -108,14 +107,13 @@ def main():
     gtGyros = torch.from_numpy(gtGyros).float().to(args.device)
 
     # Load Subject Info
-    metadataDir = osp.join(dataDir, args.subject, _C.METADATA)
+    metadataDir = osp.join(_C.DATA_DIR, args.subject, _C.METADATA)
     metadata = loadMetaData(metadataDir)
     gender = 'male' if metadata['sex'] == 'M' else 'female'
 
     # Load SMPL body model
-    SMPLDir = _C.SMPL_DIR
-    modelDir = osp.join(SMPLDir, 'smpl')
-    SMPLRegressor = osp.join(SMPLDir, _C.SMPL_REGRESSOR)
+    modelDir = osp.join(_C.SMPL_DIR, 'smpl')
+    SMPLRegressor = osp.join(_C.SMPL_DIR, _C.SMPL_REGRESSOR)
     bodyModel = buildBodyModel(modelDir, SMPLRegressor, gtKeypoints.shape[0], args.device, gender)
 
     RunFitting(args, gtKeypoints, gtGyros, bodyModel)
