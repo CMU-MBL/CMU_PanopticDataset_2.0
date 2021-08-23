@@ -88,29 +88,3 @@ def projectKeypoints(x3d, img_res, K, R, t, conf=None, dist=None):
     mask = np.logical_and(confMask, visMask)
 
     return x2d, mask
-
-
-def projectSMPL(bodyModel, bodyModelOutput, calibration):
-    """Rotate SMPL body model to given camera pose
-
-    Args:
-        bodyModel: SMPL body model
-        bodyModelOutput: SMPL body model output with parameters
-        calibration: Camera calibrations (rotation)
-    
-    Returns:
-        bodyModelOutput: Rotated SMPL body model output
-    """
-
-    from scipy.spatial.transform import Rotation as _R
-
-    device = bodyModelOutput.betas.device
-    bp = torch.from_numpy(_R.from_rotvec(bodyModelOutput.body_pose.detach().cpu().numpy().reshape(-1, 3)).as_matrix()).float().to(device).reshape(-1, 23, 3, 3)
-    bs = bodyModelOutput.betas
-    go = _R.from_rotvec(bodyModelOutput.global_orient.detach().cpu().numpy()).as_matrix()
-    go = calibration['camera_pose'] @ go
-    go = torch.from_numpy(go).float().to(device).reshape(-1, 1, 3, 3)
-
-    bodyModelOutput = bodyModel(body_pose=bp, betas=bs, global_orient=go, pose2rot=False)
-    
-    return bodyModelOutput
