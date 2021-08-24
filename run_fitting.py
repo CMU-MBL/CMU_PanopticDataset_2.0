@@ -92,14 +92,16 @@ def RunFitting(args, gtKeypoints, gtGyros, bodyModel):
 
         vidName = osp.join(args.viz_dir, f'{args.subject}_{args.activity}.mp4')
         generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeypointsConf, calibration=calibration) 
-    
+   
+    return bodyModel.body_pose, bodyModel.betas, bodyModel.global_orient
 
-def main():
+
+def main(args):
     
     # Load Keypoints and IMU data
     keypointsDir = osp.join(_C.DATA_DIR, args.subject, args.activity, _C.KEYPOINTS_FLDR)
     imuDir = osp.join(_C.DATA_DIR, args.subject, args.activity, _C.IMU_FLDR)
-    gtKeypoints = loadKeypoints(keypointsDir)[0][0]
+    gtKeypoints = loadKeypoints(keypointsDir)[0][0]#[375:377]
     gtGyros, _ = loadIMU(imuDir, args.imu_parts, gtKeypoints.shape[0])
 
     # Convert Numpy Array to Torch Tensor
@@ -116,17 +118,19 @@ def main():
     SMPLRegressor = osp.join(_C.SMPL_DIR, _C.SMPL_REGRESSOR)
     bodyModel = buildBodyModel(modelDir, SMPLRegressor, gtKeypoints.shape[0], args.device, gender)
 
-    RunFitting(args, gtKeypoints, gtGyros, bodyModel)
+    output = RunFitting(args, gtKeypoints, gtGyros, bodyModel)
+    
+    return output
 
 
 if __name__ == '__main__':
     # Load Fitting Options
     parser = ArgsOptions()
-    args = parser.parse_args()
+    _args = parser.parse_args()
 
-    assert args.subject is not None and args.activity is not None, \
+    assert _args.subject is not None and _args.activity is not None, \
             "Parse subject and activity information !"
 
-    print(f"Run fitting for Subject {args.subject} | Activity {args.activity} \n\n")
-    
-    main()
+    print(f"Run fitting for Subject {_args.subject} | Activity {_args.activity} \n\n")
+
+    main(_args)
