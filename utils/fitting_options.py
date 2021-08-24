@@ -23,6 +23,7 @@ class ArgsOptions():
         
         # Fitting options
         self.parser.add_argument('--rho', type=float, default=1e2, help='Weight for robustifier')
+        self.parser.add_argument('--ign-keypoints-idx', nargs='+', type=int, default=[])
         self.parser.add_argument('--flag1', type=int, default=1, help='Step number to initiate 1st optim flag')
         self.parser.add_argument('--flag2', type=int, default=3, help='Step number to initiate 2nd optim flag')
 
@@ -45,8 +46,12 @@ class ArgsOptions():
         self.parser.add_argument('--viz-cam-calib', type=str, default=None, help='Camera calibration for visualization')
 
 
-    def parse_args(self, **kwargs):
+    def parse_args(self, attrDict=None, **kwargs):
         self.args = self.parser.parse_args()
+
+        if attrDict is not None:
+            for key, value in attrDict.items():
+                setattr(self.args, key, value)
 
         if self.args.device == 'cuda' and not torch.cuda.is_available():
             print("CUDA is unavailable at your system ! Change device to CPU")
