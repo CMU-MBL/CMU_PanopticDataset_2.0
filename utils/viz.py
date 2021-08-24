@@ -127,6 +127,8 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
     if calibration is not None:
         camR, camT, camK, imgRes = calibration['camera_pose'], calibration['camera_transl'].T / 1e2, \
                                    calibration['camera_intrinsics'], calibration['resolution'][::-1]
+        if args.viz_type == 'smpl':
+            camT[0, 0] *= -1
     else:
         camR , camT, camK = np.eye(3), np.array([[0, 1, 30]]), np.array([[5e3, 0, imgRes[1]/2], [0, 5e3, imgRes[0]/2], [0, 0, 1]])
         imgRes = args.viz_res
@@ -166,60 +168,6 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
 
         else:
             x2d = gtX2d[frameIdx] if args.viz_type == 'gt-keypoints' else predX2d[frameIdx]
-            img = drawSkeleton(x2d[:, 0], x2d[:, 1], imgBG.copy())
-        
-        cv2.imwrite(imgName, img.astype(np.int16))
-
-    # if seqLength > 100:
-    os.system(f'ffmpeg -y -hide_banner -loglevel error -framerate 30 -pattern_type glob -i "{tmpDir}/*.png" -c:v libx264 -pix_fmt yuv420p {vidName}')
-    os.system(f'rm -rf {tmpDir}')
-
-
-def generateVideo_tmp(vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeypointsConf, calibration, imgDir, startFrame, vizType='smpl'):
-
-    gtKeypoints = gtKeypoints[:, _C.OP25_TO_OP26].detach().cpu()
-    if gtKeypointsConf is not None:
-        gtKeypointsConf = gtKeypointsConf[:, _C.OP25_TO_OP26].detach().cpu().squeeze(-1).numpy()
-
-    outDir = 'output'; os.makedirs(outDir, exist_ok=True)
-    tmpDir = osp.join(outDir, 'images'); os.system(f'rm -rf {tmpDir}'); os.makedirs(tmpDir)
-    
-    camR, camT, camK, imgRes = calibration['camera_pose'], calibration['camera_transl'].T / 1e2, \
-                               calibration['camera_intrinsics'], calibration['resolution'][::-1]
-    
-    predKeypoints = bodyModelOutput.joints[:, _C.SMPL_TO_OP25][:, _C.OP25_TO_OP26].detach().cpu()
-    predVertices = bodyModelOutput.vertices.detach().cpu()
-    
-    gtKeypoints = (gtKeypoints @ camR.T)
-    predVertices = (predVertices @ camR.T)
-    predKeypoints = (predKeypoints @ camR.T)
-
-    # Align Fitting results with Ground-Truth
-    gtPelvis = gtKeypoints[:, [6, 12]].mean(1, keepdims=True)
-    predPelvis = predKeypoints[:, [6, 12]].mean(1, keepdims=True)
-    diffPelvis = gtPelvis - predPelvis
-    
-    predVertices += diffPelvis
-    predKeypoints += diffPelvis
-
-    # Project Keypoints onto Image
-    predX2d, predMask = projectKeypoints(predKeypoints, imgRes, camK, np.eye(3), camT.T)
-    gtX2d, gtMask = projectKeypoints(gtKeypoints, imgRes, camK, np.eye(3), camT.T, conf=gtKeypointsConf)
-    predX2d[~predMask] = 0; gtX2d[~gtMask] = 0
-
-    faces = bodyModel.faces
-    seqLen = predVertices.shape[0]
-
-    for frameIdx in tqdm(range(seqLen), desc='Generating videos ...', leave=False):
-        imgBG = cv2.imread(osp.join(imgDir, 'frame_%05d.jpg'%(frameIdx + startFrame)))
-        imgName = osp.join(tmpDir, 'smpl_%05d.png'%frameIdx)
-        
-        if vizType == 'smpl':
-            vertices = predVertices[frameIdx]
-            img = renderSMPL(vertices, faces, imgBG.copy(), camK, np.eye(3), camT)
-
-        else:
-            x2d = gtX2d[frameIdx] if vizType == 'gt_keypoints' else predX2d[frameIdx]
             img = drawSkeleton(x2d[:, 0], x2d[:, 1], imgBG.copy())
         
         cv2.imwrite(imgName, img.astype(np.int16))
