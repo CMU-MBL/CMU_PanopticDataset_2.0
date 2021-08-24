@@ -143,6 +143,7 @@ class ObjectiveFunction(nn.Module):
         super(ObjectiveFunction, self).__init__()
 
         self.rho = args.rho
+        self.ignKeypointsIdx = args.ign_keypoints_idx
         self.IMUParts = args.imu_parts
         self.IMUMap = [_C.IMU_PARTS[part] for part in self.IMUParts]
 
@@ -211,6 +212,7 @@ class ObjectiveFunction(nn.Module):
         # Calculate Keypoints Loss
         gtKeypoints, predKeypoints = alignKeypoints(gtKeypoints, predKeypoints)
         distKeypoints = robustifier(gtKeypoints - predKeypoints)
+        distKeypoints[:, self.ignKeypointsIdx] *= 0
         lossKeypoints = torch.sum(distKeypoints * gtKeypointsConf ** 2, dim=(1, 2))
         lossKeypoints = lossKeypoints.sum() * self.lw_keypoints
 
