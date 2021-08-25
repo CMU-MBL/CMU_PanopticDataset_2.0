@@ -130,6 +130,7 @@ def generateVideo(args, vidName, bodyModel, bodyModelOutput, gtKeypoints, gtKeyp
         if args.viz_type == 'smpl':
             camT[0, 0] *= -1
     else:
+        imgRes = args.viz_res
         camR , camT, camK = np.eye(3), np.array([[0, 1, 30]]), np.array([[5e3, 0, imgRes[1]/2], [0, 5e3, imgRes[0]/2], [0, 0, 1]])
         imgRes = args.viz_res
 
