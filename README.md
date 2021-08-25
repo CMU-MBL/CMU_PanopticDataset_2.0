@@ -6,7 +6,8 @@ Eni Halilj*, Soyong Shin, Eric Rapp, Donglai Xiang
 Journal of Biomechanics, 2021  
   
 ![figure [algorithm]: Algorithm Overview](asset/algorithm.png)
-  
+<br>
+![**Video1**: Reconstructed SMPL Model](asset/Finals.gif)
 <br><br>
 ## Installation  
 
