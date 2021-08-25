@@ -242,13 +242,15 @@ class ObjectiveFunction(nn.Module):
         
         # Calculate Pose Continuous Loss
         if self.flag > 0:
+            validMask = (bodyModelOutput.global_orient[:-1] != bodyModelOutput.global_orient[1:]).prod(dim=-1).bool() 
+
             rmatOrient = Rodrigues(bodyModelOutput.global_orient)
-            diffOrient = rmatOrient[:-1].transpose(1, 2) @ rmatOrient[1:]
+            diffOrient = (rmatOrient[:-1].transpose(1, 2) @ rmatOrient[1:])[validMask]
             diffOrient = invRodrigues(diffOrient[:, :3])
             diffOrient = torch.sum(diffOrient ** 2)
 
             rmatPose = Rodrigues(bodyModelOutput.body_pose.view(-1, 23, 3).view(-1, 3)).view(-1, 23, 4, 4)
-            diffPose = rmatPose[:-1].transpose(2, 3) @ rmatPose[1:]
+            diffPose = (rmatPose[:-1].transpose(2, 3) @ rmatPose[1:])[validMask]
             diffPose = invRodrigues(diffPose[:, :, :3].view(-1, 3, 4)).view(-1, 23, 3)
             diffPose = torch.sum(diffPose ** 2)
 
