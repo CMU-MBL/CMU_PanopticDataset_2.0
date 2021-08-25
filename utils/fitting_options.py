@@ -29,11 +29,11 @@ class ArgsOptions():
 
         # Weight options
         self.parser.add_argument('--lw-keypoints', nargs='+', type=float, default=[1e4, 1e4, 1e4, 1e4, 1e4])
-        self.parser.add_argument('--lw-pprior', nargs='+', type=float, default=[5, 2, 1, 1, 5e-1])
+        self.parser.add_argument('--lw-pprior', nargs='+', type=float, default=[10, 5, 2, 2, 1])
         self.parser.add_argument('--lw-sprior', nargs='+', type=float, default=[100, 20, 10, 10, 5])
         self.parser.add_argument('--lw-ptemp', nargs='+', type=float, default=[0, 0, 5e2, 5e2, 5e2])
         self.parser.add_argument('--lw-stemp', nargs='+', type=float, default=[2e4, 2e4, 1e4, 1e4, 1e4])
-        self.parser.add_argument('--lw-gyro', nargs='+', type=float, default=[0, 0, 0, 0, 5e4])
+        self.parser.add_argument('--lw-gyro', nargs='+', type=float, default=[0, 0, 0, 0, 2e4])
 
         # Data options
         self.parser.add_argument('--imu-parts', nargs='+', type=str, 
