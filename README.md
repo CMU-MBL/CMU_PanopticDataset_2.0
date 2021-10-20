@@ -1,9 +1,9 @@
 # CMU_PanopticDataset_2.0
 
 Official code repository for the paper: <br>
-**Toward Portable and Modular Biomechanics Labs: How Video and IMU Fusion Will Change Gait Analysis**  
+[**American society of biomechanics early career achievement award 2020: Toward Portable and Modular Biomechanics Labs: How Video and IMU Fusion Will Change Gait Analysis**](https://www.sciencedirect.com/science/article/pii/S002192902100419X) <br>
 Eni Halilj*, Soyong Shin, Eric Rapp, Donglai Xiang  
-Journal of Biomechanics, 2021  
+*Journal of Biomechanics*, 2021  
   
 ![figure [algorithm]: Algorithm Overview](asset/algorithm.png)
 <br>
@@ -77,3 +77,19 @@ One example is:
 
 This will run optimization on Subject *S01* with *walking_direction1* activity and save video of SMPL mesh results. The video below is the sample results of the fitting:
 ![**Video1**: Reconstructed SMPL Model](asset/sample.gif)
+<br><br>
+
+## Citation
+If you find this code or our data useful for your research, please cite the following paper:
+
+    @article{HALILAJ2021110650,
+      title = {American society of biomechanics early career achievement award 2020: Toward portable and modular biomechanics labs: How video and IMU fusion will change gait analysis},
+      journal = {Journal of Biomechanics},
+      volume = {129},
+      pages = {110650},
+      year = {2021},
+      issn = {0021-9290},
+      doi = {https://doi.org/10.1016/j.jbiomech.2021.110650},
+      url = {https://www.sciencedirect.com/science/article/pii/S002192902100419X},
+      author = {Eni Halilaj and Soyong Shin and Eric Rapp and Donglai Xiang},
+      }
